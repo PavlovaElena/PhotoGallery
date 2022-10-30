@@ -41,7 +41,6 @@
 			isa = PBXGroup;
 			children = (
 				DBAFECEC2908C8CD004C703D /* PhotoGallery */,
-				DBAFED0B2909950A004C703D /* Resource */,
 				DBAFECEB2908C8CD004C703D /* Products */,
 			);
 			sourceTree = "<group>";
@@ -59,6 +58,7 @@
 			children = (
 				DBAFED0A290994BF004C703D /* App */,
 				DBAFED092909949B004C703D /* ViewControllers */,
+				DBAFED0B2909950A004C703D /* Resource */,
 			);
 			path = PhotoGallery;
 			sourceTree = "<group>";

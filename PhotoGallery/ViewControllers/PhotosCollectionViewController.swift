@@ -32,6 +32,7 @@ class PhotosCollectionViewController: UICollectionViewController {
         collectionView.register(UICollectionViewCell.self, forCellWithReuseIdentifier: reuseIdentifier)
         collectionView.backgroundColor = .white
         setupNavigationBar()
+        setupSearchBar()
     }
     
     // MARK: - UICollectionViewDataSource, UICollectionViewDelegate
@@ -63,5 +64,21 @@ class PhotosCollectionViewController: UICollectionViewController {
         navigationItem.leftBarButtonItem = UIBarButtonItem(customView: titleLabel)
         navigationItem.rightBarButtonItems = [actionBarButtonItem, organizeBarButtonItem]
         navigationController?.navigationBar.tintColor = .black
+    }
+    
+    private func setupSearchBar() {
+        let searchController = UISearchController(searchResultsController: nil)
+        navigationItem.searchController = searchController
+        navigationItem.hidesSearchBarWhenScrolling = false
+        searchController.hidesNavigationBarDuringPresentation = false
+        searchController.obscuresBackgroundDuringPresentation = false
+        searchController.searchBar.delegate = self
+    }
+}
+
+// MARK: - UISearchBarDelegate
+extension PhotosCollectionViewController: UISearchBarDelegate {
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        print(searchText)
     }
 }
