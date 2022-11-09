@@ -8,8 +8,8 @@
 import UIKit
 
 class PhotosCollectionViewController: UICollectionViewController {
-    
-    private let reuseIdentifier = "Photo"
+   
+    private var photos: [Photo] = []
     
     private lazy var actionBarButtonItem: UIBarButtonItem = {
         return UIBarButtonItem(
@@ -29,7 +29,7 @@ class PhotosCollectionViewController: UICollectionViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        collectionView.register(UICollectionViewCell.self, forCellWithReuseIdentifier: reuseIdentifier)
+        collectionView.register(PhotoCollectionViewCell.self, forCellWithReuseIdentifier: PhotoCollectionViewCell.reuseId)
         collectionView.backgroundColor = .white
         setupNavigationBar()
         setupSearchBar()
@@ -37,11 +37,13 @@ class PhotosCollectionViewController: UICollectionViewController {
     
     // MARK: - UICollectionViewDataSource, UICollectionViewDelegate
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        12
+        photos.count
     }
     
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifier, for: indexPath)
+        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: PhotoCollectionViewCell.reuseId, for: indexPath) as? PhotoCollectionViewCell else { return UICollectionViewCell() }
+        let photo = photos[indexPath.item]
+        cell.photo = photo
         cell.backgroundColor = .systemGray
         return cell
     }
@@ -78,7 +80,18 @@ class PhotosCollectionViewController: UICollectionViewController {
 
 // MARK: - UISearchBarDelegate
 extension PhotosCollectionViewController: UISearchBarDelegate {
+    
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-        print(searchText)
+        let _ = Timer.scheduledTimer(withTimeInterval: 0.5, repeats: false) { _ in
+            NetworkService.shared.fetchData(for: searchText) { [weak self] result in
+                switch result {
+                case .success(let searchResult):
+                    self?.photos = searchResult.results
+                    self?.collectionView.reloadData()
+                case .failure(let error):
+                    print(error)
+                }
+            }
+        }
     }
 }
